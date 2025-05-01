@@ -11,10 +11,6 @@ st.set_page_config(
 # Suppression du header, footer et sidebar de Streamlit
 st.markdown("""
 <style>
-    /* Supprimer le bouton Deploy */
-    .stAppDeployButton {
-        visibility: hidden;
-    }
     [class="st-emotion-cache-1y9tyez edtmxes15"] {
         display: none !important;
     }
