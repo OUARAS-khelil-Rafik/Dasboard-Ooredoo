@@ -3,7 +3,7 @@ import streamlit as st
 # Configuration de la page
 st.set_page_config(
     page_title="Authentification Ooredoo",
-    page_icon=":red_circle:",
+    page_icon="assets/ooredoo_logo.png",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
