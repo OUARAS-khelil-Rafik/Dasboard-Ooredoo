@@ -8,18 +8,30 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Suppression du header, footer et sidebar de Streamlit
+# Cacher la sidebar et le bouton d’ouverture
 st.markdown("""
 <style>
+    /* Supprimer la sidebar */
+    .stApp [data-testid="stSidebar"] {
+        display: none !important;
+    }
+    .stApp [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+
+    /* Supprimer le bouton hamburger */
+    [data-testid="collapsedControl"] {
+        display: none !important;
+    }
+
+    /* Supprimer le footer Streamlit */
+    footer {
+        visibility: hidden;
+    }
+
     /* Supprimer le bouton Deploy */
     .stAppDeployButton {
         visibility: hidden;
-    }
-    [class="st-emotion-cache-1y9tyez edtmxes15"] {
-        display: none !important;
-    }
-    [class="st-emotion-cache-169dgwr edtmxes15"] {
-        display: none !important;
     }
 </style>
 """, unsafe_allow_html=True)
