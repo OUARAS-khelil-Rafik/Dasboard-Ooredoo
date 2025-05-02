@@ -20,11 +20,35 @@ st.markdown("""
 with st.sidebar:
     st.logo("assets/ooredoo_logo.png", size="large", link="http://localhost:8501/")
 
+# --------------------------------------------------------------------------------------------------
+# Tous les fonctions
+# --------------------------------------------------------------------------------------------------
+
 # Fonction de déconnexion
 def logout():
     st.session_state.authenticated = False
     st.session_state.username = None
     st.rerun()
+
+# Fonction pour afficher le tableau de bord principal
+def afficher_tableau():
+    st.title("Tableau de bord principal")
+    # Ajoutez ici le contenu principal du tableau de bord
+
+# Définition des fonctions pour chaque opérateur
+def afficher_tableau_ooredoo():
+    st.title("Tableau de bord - Ooredoo")
+    # Ajoutez ici le contenu spécifique à Ooredoo
+
+def afficher_tableau_djezzy():
+    st.title("Tableau de bord - Djezzy")
+    # Ajoutez ici le contenu spécifique à Djezzy
+
+def afficher_tableau_mobilis():
+    st.title("Tableau de bord - Mobilis")
+    # Ajoutez ici le contenu spécifique à Mobilis
+
+# --------------------------------------------------------------------------------------------------
 
 # Vérification de l'authentification
 if "authenticated" not in st.session_state or not st.session_state.get("authenticated", False):
@@ -54,16 +78,13 @@ else:
         st.write(f"Bienvenue, {st.session_state.username} !")
         st.button("Déconnexion", on_click=logout, use_container_width=True)
 
-    # Affichage du tableau de bord en fonction de l'opérateur sélectionné
+    # Appel des fonctions en fonction de l'opérateur sélectionné
     if operateur == "Ooredoo":
-        st.title("Tableau de bord - Ooredoo")
-        
+        afficher_tableau_ooredoo()
     elif operateur == "Djezzy":
-        st.title("Tableau de bord - Djezzy")
-        
+        afficher_tableau_djezzy()
     elif operateur == "Mobilis":
-        st.title("Tableau de bord - Mobilis")
-        
+        afficher_tableau_mobilis()
     else:
-        st.title("Tableau de bord principal")
+        afficher_tableau()
         
