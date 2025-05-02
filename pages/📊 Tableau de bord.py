@@ -3,7 +3,7 @@ import streamlit as st
 
 # Configuration de la page
 st.set_page_config(page_title="Dashboard Ooredoo",
-                   page_icon="assets/ooredoo_logo.png",  # Ensure this path is correct
+                   page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
                    layout="centered"
 )
 
@@ -32,7 +32,7 @@ if "authenticated" not in st.session_state or not st.session_state.get("authenti
     with st.sidebar.form(key="login_form"):
         username = st.text_input("Nom d'utilisateur")
         password = st.text_input("Mot de passe", type="password")
-        submit_button = st.form_submit_button("Se connecter")
+        submit_button = st.form_submit_button("Se connecter", use_container_width=True)
 
     if submit_button:
         # Remplacez ces valeurs par vos propres vérifications
@@ -49,8 +49,22 @@ else:
     with st.sidebar:
         st.write(f"Bienvenue, {st.session_state.username} !")
         st.button("Déconnexion", on_click=logout, use_container_width=True)
+            # Sélection de l'opérateur
+        operateur = st.selectbox(
+            "Choisissez l'opérateur pour afficher le tableau de bord correspondant :",
+            ["Aucun", "Ooredoo", "Djezzy", "Mobilis"]
+        )
 
-    # Le reste de votre code Dashboard...
-    st.title("Tableau de bord")
-
-    # Votre contenu Dashboard ici...
+    # Affichage du tableau de bord en fonction de l'opérateur sélectionné
+    if operateur == "Ooredoo":
+        st.title("Tableau de bord - Ooredoo")
+        
+    elif operateur == "Djezzy":
+        st.title("Tableau de bord - Djezzy")
+        
+    elif operateur == "Mobilis":
+        st.title("Tableau de bord - Mobilis")
+        
+    else:
+        st.title("Tableau de bord principal")
+        

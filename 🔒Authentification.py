@@ -3,7 +3,7 @@ import streamlit as st
 # Configuration de la page
 st.set_page_config(
     page_title="Authentification Ooredoo",
-    page_icon="assets/ooredoo_logo.png",
+    page_icon="assets/ooredoo_logo2.png",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
@@ -63,7 +63,7 @@ body {
 # Logo + titre
 col1, col2 = st.columns([1, 3])
 with col1:
-    st.image("assets/ooredoo_logo.png", width=90)
+    st.image("assets/ooredoo_logo2.png", width=90)
 with col2:
     st.markdown("<h1 style='text-align: center;'>Se connecter</h1>", unsafe_allow_html=True)
 
@@ -74,7 +74,7 @@ if "authenticated" not in st.session_state:
 
 # Redirection si déjà connecté
 if st.session_state.authenticated:
-    st.switch_page("pages/Dashboard.py")
+    st.switch_page("pages/📊 Tableau de bord.py")
 
 # Champs de connexion
 username = st.text_input("Nom d'utilisateur", placeholder="Entrez votre nom d'utilisateur")
