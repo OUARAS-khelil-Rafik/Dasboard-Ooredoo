@@ -47,13 +47,12 @@ if "authenticated" not in st.session_state or not st.session_state.get("authenti
             st.sidebar.error("Nom d'utilisateur ou mot de passe incorrect.")
 else:
     with st.sidebar:
-        st.write(f"Bienvenue, {st.session_state.username} !")
-        st.button("Déconnexion", on_click=logout, use_container_width=True)
-            # Sélection de l'opérateur
         operateur = st.selectbox(
             "Choisissez l'opérateur pour afficher le tableau de bord correspondant :",
             ["Aucun", "Ooredoo", "Djezzy", "Mobilis"]
         )
+        st.write(f"Bienvenue, {st.session_state.username} !")
+        st.button("Déconnexion", on_click=logout, use_container_width=True)
 
     # Affichage du tableau de bord en fonction de l'opérateur sélectionné
     if operateur == "Ooredoo":
