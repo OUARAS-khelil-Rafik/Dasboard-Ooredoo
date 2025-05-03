@@ -34,7 +34,7 @@ def logout():
 def afficher_tableau():
     st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD PRINCIPAL</h1>", unsafe_allow_html=True)
     # Ajout de 3 Cards pour les opérateurs
-    col1, col2, col3 = st.columns(3, border=True)
+    col1, col2, col3 = st.columns(3, border=True, vertical_alignment="center")
 
     with col1:
         col11, col12 = st.columns([1, 3])
@@ -51,7 +51,7 @@ def afficher_tableau():
     with col2:
         col21, col22 = st.columns([1, 3])
         with col21:
-            st.image("assets/djezzy_logo.png", width=60)
+            st.image("assets/djezzy_logo.png", width=55)
         with col22:
             st.markdown("""
                 <div style="text-align: center;">
