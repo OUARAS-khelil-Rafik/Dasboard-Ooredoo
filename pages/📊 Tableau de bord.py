@@ -32,8 +32,30 @@ def logout():
 
 # Fonction pour afficher le tableau de bord principal
 def afficher_tableau():
-    st.title("Tableau de bord principal")
-    # Ajoutez ici le contenu principal du tableau de bord
+    st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD PRINCIPAL</h1>", unsafe_allow_html=True)
+    # Ajout de 3 Cards pour les opérateurs
+    col1, col2, col3 = st.columns(3, vertical_alignment='center', border=True)
+
+    with col1:
+        col11, col12 = st.columns(2, vertical_alignment='center')
+        with col11:
+            st.image("assets/ooredoo_logo2.png", width=70)
+        with col12:
+            st.metric(label="Abonnés Facebook", value="6.3M")
+
+    with col2:
+        col21, col22 = st.columns(2, vertical_alignment='center')
+        with col21:
+            st.image("assets/djezzy_logo.png", width=60)
+        with col22:
+            st.metric(label="Abonnés Facebook", value="6.3M")
+
+    with col3:
+        col31, col32 = st.columns(2, vertical_alignment='center')
+        with col31:
+            st.image("assets/mobilis_logo.png", width=70)
+        with col32:
+            st.metric(label="Abonnés Facebook", value="3.2M")
 
 # Définition des fonctions pour chaque opérateur
 def afficher_tableau_ooredoo():
