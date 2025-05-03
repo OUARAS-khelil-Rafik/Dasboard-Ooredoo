@@ -34,7 +34,7 @@ def afficher_tableau_comment():
     st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD COMMENTAIRES</h1>", unsafe_allow_html=True)
 
 def afficher_data_comment():
-    st.markdown("<h1 style='text-align: center;'>DONNEE</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>DONNÉES COMMENTAIRES</h1>", unsafe_allow_html=True)
     
 # --------------------------------------------------------------------------------------------------
 
