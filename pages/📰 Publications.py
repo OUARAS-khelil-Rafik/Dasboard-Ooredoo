@@ -1,5 +1,5 @@
-import os
 import streamlit as st
+import pandas as pd
 
 # Configuration de la page
 st.set_page_config(page_title="Publications",
@@ -32,10 +32,69 @@ def logout():
 
 def afficher_tableau_pub():
     st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD PUBLICATIONS</h1>", unsafe_allow_html=True)
+    
 
 def afficher_data_pub():
     st.markdown("<h1 style='text-align: center;'>DONNÉES PUBLICATIONS</h1>", unsafe_allow_html=True)
-    
+
+    # Chargement du dataset
+    try:
+        df = pd.read_csv("data/posts_df_classified.csv", encoding='utf-8', index_col=0)
+        # Vérifier si le DataFrame n'est pas vide
+        if not df.empty:
+            # Filtre pour sélectionner les colonnes à afficher
+            all_columns = df.columns.tolist()
+            available_columns = [col for col in all_columns if col in df.columns]
+            default_columns = ["Contents", "Date", "Company"]
+            selected_columns = st.multiselect("Sélectionnez les colonnes à afficher", available_columns, default=[col for col in default_columns if col in available_columns])
+            
+            # Disposition des filtres sur une seule ligne
+            col1, col2, col3 = st.columns(3, vertical_alignment="center", gap="large")
+
+            with col1:
+                # Filtre par opérateur (Company)
+                if 'Company' in df.columns:
+                    companies = df['Company'].dropna().unique()
+                    selected_company = st.selectbox("Filtrer par opérateur", ["Tous"] + list(companies))
+                    if selected_company != "Tous":
+                        df = df[df['Company'] == selected_company]
+
+            with col2:
+                # Filtre par date
+                if 'Date' in df.columns:
+                    try:
+                        df['Date'] = pd.to_datetime(df['Date']).dt.date  # Convertir en date uniquement
+                        min_date = df['Date'].min()
+                        max_date = df['Date'].max()
+                        date_range = st.date_input("Filtrer par date", [min_date, max_date])
+                        if len(date_range) == 2:
+                            start_date, end_date = date_range
+                            df = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
+                    except Exception as e:
+                        st.error(f"Erreur lors de la conversion des dates : {e}")
+
+            with col3:
+                # Filtre par catégories (initialisé par les index 11 jusqu'à la fin des index du dataset)
+                if len(df.columns) > 11:  # Vérifier si le DataFrame a au moins 12 colonnes
+                    categories = df.iloc[:, 11:].columns.tolist()  # Récupérer les colonnes à partir de l'index 11
+                    selected_category = st.selectbox("Filtrer par catégorie", ["Tous"] + categories)
+                    if selected_category != "Tous":
+                        df = df[df[selected_category] == 1]  # Supposons que les colonnes sont des indicateurs binaires
+
+            # Afficher les données filtrées
+            if selected_columns:
+                filtered_data = df[selected_columns]
+                st.dataframe(filtered_data, height=450, row_height=70)
+            else:
+                st.error("Veuillez sélectionner au moins une colonne à afficher.")
+        else:
+            st.warning("Le dataset est vide. Veuillez vérifier son contenu.")
+    except FileNotFoundError:
+        st.error("Le fichier 'data/posts_df_classified.csv' est introuvable. Veuillez vérifier le chemin.")
+    except pd.errors.EmptyDataError:
+        st.error("Le fichier est vide. Veuillez vérifier son contenu.")
+    except Exception as e:
+        st.error(f"Une erreur s'est produite : {e}")
 # --------------------------------------------------------------------------------------------------
 
 # Vérification de l'authentification
