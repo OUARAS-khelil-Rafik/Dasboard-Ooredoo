@@ -117,7 +117,7 @@ else:
     with st.sidebar:
         operateur = st.selectbox(
             "Choisissez l'opérateur pour afficher le tableau de bord correspondant :",
-            ["Aucun", "Ooredoo", "Djezzy", "Mobilis"]
+            ["All", "Ooredoo", "Djezzy", "Mobilis"]
         )
         st.write(f"Bienvenue, {st.session_state.username} !")
         st.button("Déconnexion", on_click=logout, use_container_width=True)
