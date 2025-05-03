@@ -4,7 +4,7 @@ import streamlit as st
 # Configuration de la page
 st.set_page_config(page_title="Dashboard Ooredoo",
                    page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
-                   layout="centered"
+                   layout="wide"
 )
 
 st.markdown("""
