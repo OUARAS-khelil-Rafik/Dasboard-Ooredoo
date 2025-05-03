@@ -18,8 +18,7 @@ st.markdown("""
 
 # Logo
 with st.sidebar:
-    base_url = st.secrets.get("base_url", "/")
-    st.image("assets/ooredoo_logo.png", use_column_width=True)
+    st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
 
 # Fonction de déconnexion
 def logout():

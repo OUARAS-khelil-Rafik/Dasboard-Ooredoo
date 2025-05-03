@@ -25,7 +25,7 @@ st.markdown("""
 
 # Logo
 with st.sidebar:
-    st.image("assets/ooredoo_logo.png", width=150)  # Adjust width as needed
+    st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
 
 # --------------------------------------------------------------------------------------------------
 # Tous les fonctions

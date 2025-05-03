@@ -1,0 +1,13 @@
+# Thème personnalisé
+[theme]
+base="light"
+
+[theme.light]
+backgroundColor="#ffffff"
+textColor="#000000"
+primaryColor="#e60000"
+
+[theme.dark]
+backgroundColor="#121212"
+textColor="#ffffff"
+primaryColor="#e60000"

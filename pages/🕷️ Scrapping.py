@@ -4,7 +4,7 @@ import streamlit as st
 # Configuration de la page
 st.set_page_config(page_title="Scrapping",
                    page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
-                   layout="centered"
+                   layout="wide"
 )
 
 st.markdown("""
@@ -18,7 +18,7 @@ st.markdown("""
 
 # Logo
 with st.sidebar:
-    st.logo("assets/ooredoo_logo.png", size="large", link="http://localhost:8501/")
+    st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
 
 # Fonction de déconnexion
 def logout():

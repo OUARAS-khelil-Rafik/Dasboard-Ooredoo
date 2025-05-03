@@ -38,28 +38,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Thème personnalisé
-st.markdown("""
-<style>
-body {
-    background-color: #ffffff;
-    color: #000000;
-}
-.dark-mode body {
-    background-color: #121212;
-    color: #ffffff;
-}
-.dark-mode .stButton>button {
-    background-color: #e60000;
-    color: #ffffff;
-}
-.stButton>button {
-    background-color: #e60000;
-    color: #ffffff;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # Logo + titre
 col1, col2 = st.columns([1, 3])
 with col1:
