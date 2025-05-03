@@ -34,28 +34,43 @@ def logout():
 def afficher_tableau():
     st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD PRINCIPAL</h1>", unsafe_allow_html=True)
     # Ajout de 3 Cards pour les opérateurs
-    col1, col2, col3 = st.columns(3, vertical_alignment='center', border=True)
+    col1, col2, col3 = st.columns(3, border=True)
 
     with col1:
-        col11, col12 = st.columns(2, vertical_alignment='center')
+        col11, col12 = st.columns([1, 3])
         with col11:
             st.image("assets/ooredoo_logo2.png", width=70)
         with col12:
-            st.metric(label="Abonnés Facebook", value="6.3M")
+            st.markdown("""
+                <div style="text-align: center;">
+                    <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
+                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">6.3M</span>
+                </div>
+            """, unsafe_allow_html=True)
 
     with col2:
-        col21, col22 = st.columns(2, vertical_alignment='center')
+        col21, col22 = st.columns([1, 3])
         with col21:
             st.image("assets/djezzy_logo.png", width=60)
         with col22:
-            st.metric(label="Abonnés Facebook", value="6.3M")
+            st.markdown("""
+                <div style="text-align: center;">
+                    <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
+                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">6.3M</span>
+                </div>
+            """, unsafe_allow_html=True)
 
     with col3:
-        col31, col32 = st.columns(2, vertical_alignment='center')
+        col31, col32 = st.columns([1, 3])
         with col31:
             st.image("assets/mobilis_logo.png", width=70)
         with col32:
-            st.metric(label="Abonnés Facebook", value="3.2M")
+            st.markdown("""
+                <div style="text-align: center;">
+                    <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
+                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">3.2M</span>
+                </div>
+            """, unsafe_allow_html=True)
 
 # Définition des fonctions pour chaque opérateur
 def afficher_tableau_ooredoo():
