@@ -4,7 +4,7 @@ import streamlit as st
 # Configuration de la page
 st.set_page_config(page_title="Publications",
                    page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
-                   layout="centered"
+                   layout="wide"
 )
 
 st.markdown("""
@@ -18,7 +18,9 @@ st.markdown("""
 
 # Logo
 with st.sidebar:
-    st.logo("assets/ooredoo_logo.png", size="large", link="http://localhost:8501/")
+    current_url = st.experimental_get_query_params().get("url", [st.request.host_url])[0]
+    base_url = "/".join(current_url.split("/")[:-1]) + "/"
+    st.logo("assets/ooredoo_logo.png", size="large", link=base_url)
 
 # Fonction de déconnexion
 def logout():

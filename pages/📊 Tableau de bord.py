@@ -1,6 +1,13 @@
 import os
 import streamlit as st
 
+#---------------------------- Variables ---------------------------
+value_abonnee_ooredoo = "6.3M"
+value_abonnee_djezzy = "6.3M"
+value_abonnee_mobilis = "3.2M"
+
+#-------------------------------------------------------------------
+
 # Configuration de la page
 st.set_page_config(page_title="Dashboard Ooredoo",
                    page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
@@ -18,7 +25,7 @@ st.markdown("""
 
 # Logo
 with st.sidebar:
-    st.logo("assets/ooredoo_logo.png", size="large", link="http://localhost:8501/")
+    st.image("assets/ooredoo_logo.png", width=150)  # Adjust width as needed
 
 # --------------------------------------------------------------------------------------------------
 # Tous les fonctions
@@ -31,7 +38,7 @@ def logout():
     st.rerun()
 
 # Fonction pour afficher le tableau de bord principal
-def afficher_tableau():
+def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_mobilis):
     st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD PRINCIPAL</h1>", unsafe_allow_html=True)
     # Ajout de 3 Cards pour les opérateurs
     col1, col2, col3 = st.columns(3, border=True, vertical_alignment="center")
@@ -41,10 +48,10 @@ def afficher_tableau():
         with col11:
             st.image("assets/ooredoo_logo2.png", width=70)
         with col12:
-            st.markdown("""
+            st.markdown(f"""
                 <div style="text-align: center;">
                     <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
-                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">6.3M</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{value_abonnee_ooredoo}</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -53,10 +60,10 @@ def afficher_tableau():
         with col21:
             st.image("assets/djezzy_logo.png", width=55)
         with col22:
-            st.markdown("""
+            st.markdown(f"""
                 <div style="text-align: center;">
                     <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
-                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">6.3M</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{value_abonnee_djezzy}</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -65,10 +72,10 @@ def afficher_tableau():
         with col31:
             st.image("assets/mobilis_logo.png", width=70)
         with col32:
-            st.markdown("""
+            st.markdown(f"""
                 <div style="text-align: center;">
                     <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
-                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">3.2M</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{value_abonnee_mobilis}</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -102,7 +109,7 @@ if "authenticated" not in st.session_state or not st.session_state.get("authenti
             st.session_state.authenticated = True
             st.session_state.username = username
             st.sidebar.success("Connexion réussie !")
-            # On utilise st.rerun() pour recharger la page et masquer le formulaire
+            # On utilise st.experimental_rerun() pour recharger la page et masquer le formulaire
             st.rerun()
         else:
             st.sidebar.error("Nom d'utilisateur ou mot de passe incorrect.")
@@ -123,5 +130,4 @@ else:
     elif operateur == "Mobilis":
         afficher_tableau_mobilis()
     else:
-        afficher_tableau()
-        
+        afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_mobilis)
