@@ -42,11 +42,10 @@ def afficher_data_pub():
         df = pd.read_csv("data/posts_df_classified.csv", encoding='utf-8', index_col=0)
         # Vérifier si le DataFrame n'est pas vide
         if not df.empty:
-            # Filtre pour sélectionner les colonnes à afficher
-            all_columns = df.columns.tolist()
-            available_columns = [col for col in all_columns if col in df.columns]
+            # Filtre pour sélectionner les colonnes à afficher jusqu'à l'index 11
+            all_columns = df.columns[:11].tolist()  # Sélectionner les colonnes jusqu'à l'index 11 inclus
             default_columns = ["Contents", "Date", "Company"]
-            selected_columns = st.multiselect("Sélectionnez les colonnes à afficher", available_columns, default=[col for col in default_columns if col in available_columns])
+            selected_columns = st.multiselect("Sélectionnez les colonnes à afficher", all_columns, default=[col for col in default_columns if col in all_columns])
             
             # Disposition des filtres sur une seule ligne
             col1, col2, col3 = st.columns(3, vertical_alignment="center", gap="large")
