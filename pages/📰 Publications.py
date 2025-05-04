@@ -86,6 +86,9 @@ def afficher_data_pub():
                 st.dataframe(filtered_data, height=450, row_height=70)
             else:
                 st.error("Veuillez sélectionner au moins une colonne à afficher.")
+            
+            # Compter le nombre de publications affichées
+            st.markdown(f"<p style='text-align: center;'><strong>Nombre total de publications trouvées : {len(df)}</strong></p>", unsafe_allow_html=True)
         else:
             st.warning("Le dataset est vide. Veuillez vérifier son contenu.")
     except FileNotFoundError:
