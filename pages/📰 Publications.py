@@ -62,21 +62,23 @@ def afficher_tableau_pub(df):
             df['Mois'] = df['Date'].dt.month
             df['Année'] = df['Date'].dt.year
 
-            # Filtres AVANT affichage des cards
-
-            selected_month_range = st.select_slider(
-                "Filtrer par mois",
-                options=list(range(1, 13)),
-                value=(1, 12),
-                format_func=lambda x: month_names[x - 1]
-            )
-            start_month, end_month = selected_month_range
-
+            # Filtres d'affichage
             with st.sidebar:
-                selected_year = st.selectbox("Filtrer par année", sorted(df['Année'].unique().tolist()))
-                # Nouveau filtre par opérateurs
+                # Filtre par opérateurs
                 operators = ["Tous"] + df['Company'].dropna().unique().tolist()
                 selected_operator = st.selectbox("Filtrer par opérateur", operators)
+                
+                # Filtre par année
+                selected_year = st.selectbox("Filtrer par année", sorted(df['Année'].unique().tolist()))
+                
+                # Filtre par mois
+                selected_month_range = st.select_slider(
+                    "Filtrer par mois",
+                    options=list(range(1, 13)),
+                    value=(1, 12),
+                    format_func=lambda x: month_names[x - 1]
+                )
+                start_month, end_month = selected_month_range
 
             # Application des filtres
             df_filtered = df[
