@@ -74,6 +74,9 @@ def afficher_tableau_pub(df):
 
             with st.sidebar:
                 selected_year = st.selectbox("Filtrer par année", sorted(df['Année'].unique().tolist()))
+                # Nouveau filtre par opérateurs
+                operators = ["Tous"] + df['Company'].dropna().unique().tolist()
+                selected_operator = st.selectbox("Filtrer par opérateur", operators)
 
             # Application des filtres
             df_filtered = df[
@@ -81,6 +84,9 @@ def afficher_tableau_pub(df):
                 (df['Mois'] <= end_month) &
                 (df['Année'] == selected_year)
             ]
+
+            if selected_operator != "Tous":
+                df_filtered = df_filtered[df_filtered['Company'] == selected_operator]
 
             # Calcul des publications filtrées
             nb_pub_ooredoo = df_filtered[df_filtered['Company'] == 'Ooredoo'].shape[0]
