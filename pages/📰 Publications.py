@@ -202,13 +202,14 @@ def afficher_tableau_pub(df):
                 tooltip=['Category', 'Count'],
                 opacity=alt.value(0.9)
             ).properties(
-                width=250,
-                height=250,
-                title=alt.TitleParams(text=title, align="center", fontSize=14, color=title_color)
+                width=300,  # Ajuster la largeur
+                height=300,  # Ajuster la hauteur
+                title=alt.TitleParams(text=title, align="center", fontSize=20, color=title_color)
             ).configure_legend(
                 orient='right'
             ).configure_title(
-                anchor='middle'
+                anchor='middle',
+                fontSize=20
             )
             return chart
 
@@ -217,7 +218,8 @@ def afficher_tableau_pub(df):
         mobilis_chart = create_pie_chart(mobilis_data, "Mobilis", 'category10', '#28A745')  # Vert pour Mobilis
 
         # Afficher les graphiques côte à côte
-        st.markdown("---")
+        st.markdown("")
+        st.markdown("")
         st.markdown("<h3 style='text-align: center;'>Répartition des Catégories par Opérateur</h3>", unsafe_allow_html=True)
         st.markdown("")
         
