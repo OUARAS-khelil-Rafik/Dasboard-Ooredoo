@@ -104,7 +104,7 @@ def afficher_tableau_pub(df):
                     st.markdown(f"""
                         <div style="text-align: center;">
                             <span style="font-size: 0.9rem; font-weight: bold;">Nombre total des publications</span><br>
-                            <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{nb_pub_ooredoo}</span>
+                            <span style="font-size: 2rem; font-weight: bold; color: #E30613;">{nb_pub_ooredoo}</span>
                         </div>
                     """, unsafe_allow_html=True)
 
@@ -116,7 +116,7 @@ def afficher_tableau_pub(df):
                     st.markdown(f"""
                         <div style="text-align: center;">
                             <span style="font-size: 0.9rem; font-weight: bold;">Nombre total des publications</span><br>
-                            <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{nb_pub_djezzy}</span>
+                            <span style="font-size: 2rem; font-weight: bold; color: #F58220;">{nb_pub_djezzy}</span>
                         </div>
                     """, unsafe_allow_html=True)
 
@@ -128,7 +128,7 @@ def afficher_tableau_pub(df):
                     st.markdown(f"""
                         <div style="text-align: center;">
                             <span style="font-size: 0.9rem; font-weight: bold;">Nombre total des publications</span><br>
-                            <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{nb_pub_mobilis}</span>
+                            <span style="font-size: 2rem; font-weight: bold; color: #28A745;">{nb_pub_mobilis}</span>
                         </div>
                     """, unsafe_allow_html=True)
 
@@ -158,17 +158,18 @@ def afficher_tableau_pub(df):
                     y=alt.Y('Reaction_Score:Q', title='Score des Réactions'),
                     color=alt.Color('Company:N',
                                     scale=alt.Scale(domain=['Ooredoo', 'Djezzy', 'Mobilis'],
-                                                    range=['#E30613', '#F58220', '#007A33']),
+                                                    range=['#E30613', '#F58220', '#28A745']),
                                     legend=alt.Legend(title="Opérateur")),
                     tooltip=['Company', 'Mois', 'Reaction_Score'],
                     xOffset='Company',
-                    opacity= alt.value(0.7),
+                    opacity= alt.value(0.9),
                 ).properties(
                     width=700,
                     height=400,
-                    title=f"Score des Réactions par Mois et par Opérateur en {selected_year}"
                 )
-
+                
+                st.markdown(f"<h3 style='text-align: center;'>Score des Réactions par Mois et par Opérateur en {selected_year}</h3>", unsafe_allow_html=True)
+                st.markdown("")
                 st.altair_chart(chart, use_container_width=True)
             else:
                 st.error("Les colonnes nécessaires pour calculer le score des réactions sont manquantes.")
@@ -177,7 +178,56 @@ def afficher_tableau_pub(df):
             st.error(f"Erreur : {e}")
     else:
         st.error("Les colonnes 'Date' et 'Company' sont nécessaires.")
+    
+    # === Graphiques Pie pour les Catégories ===
+    if len(df.columns) > 11:  # Vérifier si le DataFrame a au moins 12 colonnes
+        categories = df.columns[11:20]  # Récupérer les colonnes à partir de l'index 11
 
+        # Préparer les données pour chaque opérateur
+        def prepare_pie_data(operator):
+            operator_data = df_filtered[df_filtered['Company'] == operator]
+            category_counts = operator_data[categories].sum().reset_index()
+            category_counts.columns = ['Category', 'Count']
+            return category_counts
+
+        ooredoo_data = prepare_pie_data('Ooredoo')
+        djezzy_data = prepare_pie_data('Djezzy')
+        mobilis_data = prepare_pie_data('Mobilis')
+
+        # Créer les graphiques
+        def create_pie_chart(data, title, color_scheme, title_color):
+            chart = alt.Chart(data).mark_arc(innerRadius=40).encode(
+                theta=alt.Theta(field="Count", type="quantitative"),
+                color=alt.Color(field="Category", type="nominal", legend=alt.Legend(orient="right", title="Catégories", labelFontSize=10)),
+                tooltip=['Category', 'Count'],
+                opacity=alt.value(0.9)
+            ).properties(
+                width=250,
+                height=250,
+                title=alt.TitleParams(text=title, align="center", fontSize=14, color=title_color)
+            ).configure_legend(
+                orient='right'
+            ).configure_title(
+                anchor='middle'
+            )
+            return chart
+
+        ooredoo_chart = create_pie_chart(ooredoo_data, "Ooredoo", 'category10', '#E30613')  # Rouge pour Ooredoo
+        djezzy_chart = create_pie_chart(djezzy_data, "Djezzy", 'category10', '#F58220')  # Orange pour Djezzy
+        mobilis_chart = create_pie_chart(mobilis_data, "Mobilis", 'category10', '#28A745')  # Vert pour Mobilis
+
+        # Afficher les graphiques côte à côte
+        st.markdown("---")
+        st.markdown("<h3 style='text-align: center;'>Répartition des Catégories par Opérateur</h3>", unsafe_allow_html=True)
+        st.markdown("")
+        
+        col1, col2, col3 = st.columns(3, vertical_alignment="center", gap="medium")
+        with col1:
+            st.altair_chart(ooredoo_chart, use_container_width=True)
+        with col2:
+            st.altair_chart(djezzy_chart, use_container_width=True)
+        with col3:
+            st.altair_chart(mobilis_chart, use_container_width=True)
     
 def afficher_data_pub(df):
     st.markdown("<h1 style='text-align: center;'>DONNÉES PUBLICATIONS</h1>", unsafe_allow_html=True)

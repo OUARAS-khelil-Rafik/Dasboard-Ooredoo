@@ -51,7 +51,7 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             st.markdown(f"""
                 <div style="text-align: center;">
                     <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
-                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{value_abonnee_ooredoo}</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #E30613;">{value_abonnee_ooredoo}</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -63,7 +63,7 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             st.markdown(f"""
                 <div style="text-align: center;">
                     <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
-                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{value_abonnee_djezzy}</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #F58220;">{value_abonnee_djezzy}</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -75,7 +75,7 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             st.markdown(f"""
                 <div style="text-align: center;">
                     <span style="font-size: 1rem; font-weight: bold;">Abonnés Facebook</span><br>
-                    <span style="font-size: 2rem; font-weight: bold; color: #FF0000;">{value_abonnee_mobilis}</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #28A745;">{value_abonnee_mobilis}</span>
                 </div>
             """, unsafe_allow_html=True)
 
