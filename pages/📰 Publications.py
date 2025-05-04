@@ -155,7 +155,8 @@ def afficher_tableau_pub(df):
                                                     range=['#E30613', '#F58220', '#007A33']),
                                     legend=alt.Legend(title="Opérateur")),
                     tooltip=['Company', 'Mois', 'Reaction_Score'],
-                    xOffset='Company'
+                    xOffset='Company',
+                    opacity= alt.value(0.7),
                 ).properties(
                     width=700,
                     height=400,
