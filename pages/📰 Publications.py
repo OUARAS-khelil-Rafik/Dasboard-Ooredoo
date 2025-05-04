@@ -279,7 +279,7 @@ def afficher_data_pub(df):
             st.error("Veuillez sélectionner au moins une colonne à afficher.")
         
         # Compter le nombre de publications affichées
-        st.markdown(f"<p style='text-align: center;'><strong>Nombre total de publications trouvées : {len(df)}</strong></p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center;'><strong>Nombre total de publications trouvées : <span style='color: #E30613;'>{len(df)}</span></strong></p>", unsafe_allow_html=True)
     else:
         st.warning("Le dataset est vide. Veuillez vérifier son contenu.")
 # --------------------------------------------------------------------------------------------------
