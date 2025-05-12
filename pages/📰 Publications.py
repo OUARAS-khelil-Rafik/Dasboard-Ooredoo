@@ -29,7 +29,7 @@ with st.sidebar:
 
 # Chargement du dataset
 try:
-    df = pd.read_csv("data/posts_df_classified.csv", encoding='utf-8', index_col=0)
+    df_posts = pd.read_csv("data/posts_df_classified.csv", encoding='utf-8', index_col=0)
 except FileNotFoundError:
     st.error("Le fichier 'data/posts_df_classified.csv' est introuvable. Veuillez vérifier le chemin.")
 except pd.errors.EmptyDataError:
@@ -47,29 +47,29 @@ def logout():
     st.session_state.username = None
     st.rerun()
 
-def afficher_tableau_pub(df):
+def afficher_tableau_pub(df_posts):
     st.markdown("<h1 style='text-align: center;'>TABLEAU DE BORD PUBLICATIONS</h1>", unsafe_allow_html=True)
     st.markdown("")
 
-    if 'Date' in df.columns and 'Company' in df.columns:
+    if 'Date' in df_posts.columns and 'Company' in df_posts.columns:
         try:
             # Ordre des mois
             month_names = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
                            'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
             # Préparer les colonnes de date
-            df['Date'] = pd.to_datetime(df['Date'])
-            df['Mois'] = df['Date'].dt.month
-            df['Année'] = df['Date'].dt.year
+            df_posts['Date'] = pd.to_datetime(df_posts['Date'])
+            df_posts['Mois'] = df_posts['Date'].dt.month
+            df_posts['Année'] = df_posts['Date'].dt.year
 
             # Filtres d'affichage
             with st.sidebar:
                 # Filtre par opérateurs
-                operators = ["Tous"] + df['Company'].dropna().unique().tolist()
+                operators = ["Tous"] + df_posts['Company'].dropna().unique().tolist()
                 selected_operator = st.selectbox("Filtrer par opérateur", operators)
                 
                 # Filtre par année
-                selected_year = st.selectbox("Filtrer par année", sorted(df['Année'].unique().tolist()))
+                selected_year = st.selectbox("Filtrer par année", sorted(df_posts['Année'].unique().tolist()))
                 
                 # Filtre par mois
                 selected_month_range = st.select_slider(
@@ -81,10 +81,10 @@ def afficher_tableau_pub(df):
                 start_month, end_month = selected_month_range
 
             # Application des filtres
-            df_filtered = df[
-                (df['Mois'] >= start_month) &
-                (df['Mois'] <= end_month) &
-                (df['Année'] == selected_year)
+            df_filtered = df_posts[
+                (df_posts['Mois'] >= start_month) &
+                (df_posts['Mois'] <= end_month) &
+                (df_posts['Année'] == selected_year)
             ]
 
             if selected_operator != "Tous":
@@ -139,7 +139,7 @@ def afficher_tableau_pub(df):
 
             # === Graphique Score des Réactions ===
             required_columns = ['Nb Love', 'Nb Care', 'Nb Like', 'Nb Wow', 'Nb Haha', 'Nb Sad', 'Nb Angry']
-            if all(col in df.columns for col in required_columns):
+            if all(col in df_posts.columns for col in required_columns):
                 df_filtered['Reaction_Score'] = (
                     2.0 * df_filtered['Nb Love'] +
                     1.5 * df_filtered['Nb Wow'] +
@@ -182,8 +182,8 @@ def afficher_tableau_pub(df):
         st.error("Les colonnes 'Date' et 'Company' sont nécessaires.")
     
     # === Graphiques Pie pour les Catégories ===
-    if len(df.columns) > 11:  # Vérifier si le DataFrame a au moins 12 colonnes
-        categories = df.columns[11:20]  # Récupérer les colonnes à partir de l'index 11
+    if len(df_posts.columns) > 11:  # Vérifier si le DataFrame a au moins 12 colonnes
+        categories = df_posts.columns[11:20]  # Récupérer les colonnes à partir de l'index 11
 
         # Préparer les données pour chaque opérateur
         def prepare_pie_data(operator):
@@ -233,12 +233,12 @@ def afficher_tableau_pub(df):
         with col3:
             st.altair_chart(mobilis_chart, use_container_width=True)
     
-def afficher_data_pub(df):
+def afficher_data_pub(df_posts):
     st.markdown("<h1 style='text-align: center;'>DONNÉES PUBLICATIONS</h1>", unsafe_allow_html=True)
 
-    if not df.empty:
+    if not df_posts.empty:
         # Filtre pour sélectionner les colonnes à afficher jusqu'à l'index 11
-        all_columns = df.columns[:11].tolist()  # Sélectionner les colonnes jusqu'à l'index 11 inclus
+        all_columns = df_posts.columns[:11].tolist()  # Sélectionner les colonnes jusqu'à l'index 11 inclus
         default_columns = ["Contents", "Date", "Company"]
         selected_columns = st.multiselect("Sélectionnez les colonnes à afficher", all_columns, default=[col for col in default_columns if col in all_columns])
         
@@ -247,43 +247,43 @@ def afficher_data_pub(df):
 
         with col1:
             # Filtre par opérateur (Company)
-            if 'Company' in df.columns:
-                companies = df['Company'].dropna().unique()
+            if 'Company' in df_posts.columns:
+                companies = df_posts['Company'].dropna().unique()
                 selected_company = st.selectbox("Filtrer par opérateur", ["Tous"] + list(companies))
                 if selected_company != "Tous":
-                    df = df[df['Company'] == selected_company]
+                    df_posts = df_posts[df_posts['Company'] == selected_company]
 
         with col2:
             # Filtre par date
-            if 'Date' in df.columns:
+            if 'Date' in df_posts.columns:
                 try:
-                    df['Date'] = pd.to_datetime(df['Date']).dt.date  # Convertir en date uniquement
-                    min_date = df['Date'].min()
-                    max_date = df['Date'].max()
+                    df_posts['Date'] = pd.to_datetime(df_posts['Date']).dt.date  # Convertir en date uniquement
+                    min_date = df_posts['Date'].min()
+                    max_date = df_posts['Date'].max()
                     date_range = st.date_input("Filtrer par date", [min_date, max_date])
                     if len(date_range) == 2:
                         start_date, end_date = date_range
-                        df = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
+                        df_posts = df_posts[(df_posts['Date'] >= start_date) & (df_posts['Date'] <= end_date)]
                 except Exception as e:
                     st.error(f"Erreur lors de la conversion des dates : {e}")
 
         with col3:
             # Filtre par catégories (initialisé par les index 11 jusqu'à la fin des index du dataset)
-            if len(df.columns) > 11:  # Vérifier si le DataFrame a au moins 12 colonnes
-                categories = df.iloc[:, 11:].columns.tolist()  # Récupérer les colonnes à partir de l'index 11
+            if len(df_posts.columns) > 11:  # Vérifier si le DataFrame a au moins 12 colonnes
+                categories = df_posts.iloc[:, 11:].columns.tolist()  # Récupérer les colonnes à partir de l'index 11
                 selected_category = st.selectbox("Filtrer par catégorie", ["Tous"] + categories)
                 if selected_category != "Tous":
-                    df = df[df[selected_category] == 1]  # Supposons que les colonnes sont des indicateurs binaires
+                    df_posts = df_posts[df_posts[selected_category] == 1]  # Supposons que les colonnes sont des indicateurs binaires
 
         # Afficher les données filtrées
         if selected_columns:
-            filtered_data = df[selected_columns]
+            filtered_data = df_posts[selected_columns]
             st.dataframe(filtered_data, height=450, row_height=70)
         else:
             st.error("Veuillez sélectionner au moins une colonne à afficher.")
         
         # Compter le nombre de publications affichées
-        st.markdown(f"<p style='text-align: center;'><strong>Nombre total de publications trouvées : <span style='color: #E30613;'>{len(df)}</span></strong></p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center;'><strong>Nombre total de publications trouvées : <span style='color: #E30613;'>{len(df_posts)}</span></strong></p>", unsafe_allow_html=True)
     else:
         st.warning("Le dataset est vide. Veuillez vérifier son contenu.")
 # --------------------------------------------------------------------------------------------------
@@ -317,9 +317,9 @@ else:
 
     # Appel des fonctions
     if pub == "Données":
-        afficher_data_pub(df)
+        afficher_data_pub(df_posts)
     else:
-        afficher_tableau_pub(df)
+        afficher_tableau_pub(df_posts)
     
     with st.sidebar:
         st.button("Déconnexion", on_click=logout, use_container_width=True)
