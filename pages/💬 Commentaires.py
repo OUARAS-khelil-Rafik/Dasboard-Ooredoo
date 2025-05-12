@@ -80,7 +80,6 @@ def afficher_data_comment(df_comments, df_posts):
                 if selected_post_id != "Tous":
                     df_comments = df_comments[df_comments['ID Post'] == selected_post_id]
         
-        
         with col2:
             # Filtre par Date
             if 'Date' in df_posts.columns and 'ID Post' in df_comments.columns:
@@ -91,8 +90,10 @@ def afficher_data_comment(df_comments, df_posts):
                     date_range = st.date_input("Filtrer par date", [min_date, max_date])
                     if len(date_range) == 2:
                         start_date, end_date = date_range
-                        df_comments = df_comments.merge(df_posts[['ID', 'Date']], left_on='ID Post', right_on='ID', how='left')
-                        df_comments = df_comments[(df_comments['Date'] >= start_date) & (df_comments['Date'] <= end_date)]
+                        post_ids_in_date_range = df_posts[
+                            (df_posts['Date'] >= start_date) & (df_posts['Date'] <= end_date)
+                        ]['ID']
+                        df_comments = df_comments[df_comments['ID Post'].isin(post_ids_in_date_range)]
                 except Exception as e:
                     st.error(f"Erreur lors de la conversion des dates : {e}")
         
@@ -107,7 +108,7 @@ def afficher_data_comment(df_comments, df_posts):
         with col4:
             # Filtre par catégories (initialisé par les index 4 jusqu'à la fin des index du dataset)
             if len(df_comments.columns) > 4:  # Vérifier si le DataFrame a au moins 4 colonnes
-                categories = df_comments.iloc[:, 4:].columns.tolist()  # Récupérer les colonnes à partir de l'index 11
+                categories = df_comments.iloc[:, 4:].columns.tolist()  # Récupérer les colonnes à partir de l'index 4
                 selected_category = st.selectbox("Filtrer par catégorie", ["Tous"] + categories)
                 if selected_category != "Tous":
                     df_comments = df_comments[df_comments[selected_category] == 1]  # Supposons que les colonnes sont des indicateurs binaires
