@@ -82,10 +82,10 @@ def afficher_tableau_pub(df_posts):
 
             # Application des filtres
             df_filtered = df_posts[
-                (df_posts['Mois'] >= start_month) &
-                (df_posts['Mois'] <= end_month) &
+                (df_posts['Mois'] >= start_month) & 
+                (df_posts['Mois'] <= end_month) & 
                 (df_posts['Année'] == selected_year)
-            ]
+            ].copy()
 
             if selected_operator != "Tous":
                 df_filtered = df_filtered[df_filtered['Company'] == selected_operator]
@@ -140,7 +140,7 @@ def afficher_tableau_pub(df_posts):
             # === Graphique Score des Réactions ===
             required_columns = ['Nb Love', 'Nb Care', 'Nb Like', 'Nb Wow', 'Nb Haha', 'Nb Sad', 'Nb Angry']
             if all(col in df_posts.columns for col in required_columns):
-                df_filtered['Reaction_Score'] = (
+                df_filtered.loc[:, 'Reaction_Score'] = (
                     2.0 * df_filtered['Nb Love'] +
                     1.5 * df_filtered['Nb Wow'] +
                     1.2 * df_filtered['Nb Care'] +
@@ -270,7 +270,7 @@ def afficher_data_pub(df_posts):
             # Filtre par date
             if 'Date' in df_posts.columns:
                 try:
-                    df_posts['Date'] = pd.to_datetime(df_posts['Date']).dt.date  # Convertir en date uniquement
+                    df_posts.loc[:, 'Date'] = pd.to_datetime(df_posts['Date']).dt.date  # Convertir en date uniquement
                     min_date = df_posts['Date'].min()
                     max_date = df_posts['Date'].max()
                     date_range = st.date_input("Filtrer par date", [min_date, max_date])
