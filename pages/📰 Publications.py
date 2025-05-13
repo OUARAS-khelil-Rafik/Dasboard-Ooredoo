@@ -200,7 +200,7 @@ def afficher_tableau_pub(df_posts):
         def create_pie_chart(data, title, color_scheme, title_color):
             chart = alt.Chart(data).mark_arc(innerRadius=40).encode(
                 theta=alt.Theta(field="Count", type="quantitative"),
-                color=alt.Color(field="Category", type="nominal", legend=alt.Legend(orient="right", title="Catégories", labelFontSize=10)),
+                color=alt.Color(field="Category", type="nominal"),
                 tooltip=['Category', 'Count'],
                 opacity=alt.value(0.9)
             ).properties(
@@ -208,7 +208,7 @@ def afficher_tableau_pub(df_posts):
                 height=300,  # Ajuster la hauteur
                 title=alt.TitleParams(text=title, align="center", fontSize=20, color=title_color)
             ).configure_legend(
-                orient='right'
+                disable=True  # Désactiver la légende
             ).configure_title(
                 anchor='middle',
                 fontSize=20
@@ -225,13 +225,26 @@ def afficher_tableau_pub(df_posts):
         st.markdown("<h3 style='text-align: center;'>Répartition des Catégories par Opérateur</h3>", unsafe_allow_html=True)
         st.markdown("")
         
-        col1, col2, col3 = st.columns(3, vertical_alignment="center", gap="medium")
-        with col1:
-            st.altair_chart(ooredoo_chart, use_container_width=True)
-        with col2:
-            st.altair_chart(djezzy_chart, use_container_width=True)
-        with col3:
-            st.altair_chart(mobilis_chart, use_container_width=True)
+        if selected_operator == "Ooredoo":
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.altair_chart(ooredoo_chart.configure_legend(orient='top-right'), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        elif selected_operator == "Djezzy":
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.altair_chart(djezzy_chart.configure_legend(orient='top-right'), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        elif selected_operator == "Mobilis":
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.altair_chart(mobilis_chart.configure_legend(orient='top-right'), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            col1, col2, col3 = st.columns(3, vertical_alignment="center", gap="medium")
+            with col1:
+                st.altair_chart(ooredoo_chart, use_container_width=True)
+            with col2:
+                st.altair_chart(djezzy_chart, use_container_width=True)
+            with col3:
+                st.altair_chart(mobilis_chart, use_container_width=True)
     
 def afficher_data_pub(df_posts):
     st.markdown("<h1 style='text-align: center;'>DONNÉES PUBLICATIONS</h1>", unsafe_allow_html=True)

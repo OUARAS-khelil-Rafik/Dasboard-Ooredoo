@@ -227,6 +227,73 @@ def afficher_tableau_comment(df_comments, df_posts):
             st.error(f"Erreur : {e}")
     else:
         st.error("Les colonnes 'Date', 'Company' et 'ID Post' sont nécessaires.")
+    
+    # === Graphiques Pie pour les Catégories (commentaires) ===
+    if len(df_comments.columns) > 4:  # Vérifier si le DataFrame a au moins 5 colonnes
+        categories = df_comments.columns[4:]  # Récupérer les colonnes à partir de l'index 4
+
+        # Préparer les données pour chaque opérateur
+        def prepare_pie_data(operator):
+            operator_post_ids = df_filtered_posts[df_filtered_posts['Company'] == operator]['ID']
+            operator_comments = df_filtered_comments[df_filtered_comments['ID Post'].isin(operator_post_ids)]
+            category_counts = operator_comments[categories].sum().reset_index()
+            category_counts.columns = ['Category', 'Count']
+            return category_counts
+
+        ooredoo_data = prepare_pie_data('Ooredoo')
+        djezzy_data = prepare_pie_data('Djezzy')
+        mobilis_data = prepare_pie_data('Mobilis')
+
+        # Créer les graphiques
+        def create_pie_chart(data, title, title_color):
+            chart = alt.Chart(data).mark_arc(innerRadius=40).encode(
+                theta=alt.Theta(field="Count", type="quantitative"),
+                color=alt.Color(field="Category", type="nominal"),
+                tooltip=['Category', 'Count'],
+                opacity=alt.value(0.9)
+            ).properties(
+                width=300,  # Ajuster la largeur
+                height=300,  # Ajuster la hauteur
+                title=alt.TitleParams(text=title, align="center", fontSize=20, color=title_color)
+            ).configure_title(
+                align="center",
+                anchor='middle',
+                fontSize=20
+            ).configure_legend(
+                disable=True  # Désactiver la légende
+            )
+            return chart
+
+        ooredoo_chart = create_pie_chart(ooredoo_data, "Ooredoo", '#E30613')  # Rouge pour Ooredoo
+        djezzy_chart = create_pie_chart(djezzy_data, "Djezzy", '#F58220')  # Orange pour Djezzy
+        mobilis_chart = create_pie_chart(mobilis_data, "Mobilis", '#28A745')  # Vert pour Mobilis
+
+        # Afficher les graphiques côte à côte
+        st.markdown("")
+        st.markdown("")
+        st.markdown("<h3 style='text-align: center;'>Répartition des Catégories par Opérateur</h3>", unsafe_allow_html=True)
+        st.markdown("")
+        
+        if selected_operator == "Ooredoo":
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.altair_chart(ooredoo_chart.configure_legend(orient='top-right'), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        elif selected_operator == "Djezzy":
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.altair_chart(djezzy_chart.configure_legend(orient='top-right'), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        elif selected_operator == "Mobilis":
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.altair_chart(mobilis_chart.configure_legend(orient='top-right'), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            col1, col2, col3 = st.columns(3, gap="small", vertical_alignment="center")
+            with col1:
+                st.altair_chart(ooredoo_chart, use_container_width=True)
+            with col2:
+                st.altair_chart(djezzy_chart, use_container_width=True)
+            with col3:
+                st.altair_chart(mobilis_chart, use_container_width=True)
 
 def afficher_data_comment(df_comments, df_posts):
     st.markdown("<h1 style='text-align: center;'>DONNÉES COMMENTAIRES</h1>", unsafe_allow_html=True)
