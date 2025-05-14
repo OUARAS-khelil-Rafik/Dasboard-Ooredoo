@@ -173,7 +173,7 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             # Diagramme en bar pour les scores annuels
             chart_data = pd.DataFrame({
                 'Opérateur': score_annuel_par_operateur.index,
-                'Score Annuel': score_annuel_par_operateur.values
+                'Score Annuel': [f"{value:.2f}" for value in score_annuel_par_operateur.values]
             })
             # Définir les couleurs pour chaque opérateur
             color_scale = alt.Scale(
