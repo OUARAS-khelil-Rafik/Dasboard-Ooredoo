@@ -262,7 +262,7 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             
             # Préparer les données pour le graphique
             score_total_par_mois = score_total_par_mois.reset_index()
-            score_total_par_mois['Mois'] = score_total_par_mois['Mois'].dt.strftime('%B')
+            score_total_par_mois['Mois'] = score_total_par_mois['Mois'].dt.strftime('%B').str.capitalize()
             score_total_par_mois['Score Total'] = score_total_par_mois['Score Total'].round(2)  # Arrondir à 2 décimales
 
             # Diagramme en bar
