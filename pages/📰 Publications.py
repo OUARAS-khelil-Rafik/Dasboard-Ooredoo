@@ -142,12 +142,12 @@ def afficher_tableau_pub(df_posts):
             if all(col in df_posts.columns for col in required_columns):
                 df_filtered.loc[:, 'Reaction_Score'] = (
                     2.0 * df_filtered['Nb Love'] +
-                    1.5 * df_filtered['Nb Wow'] +
-                    1.2 * df_filtered['Nb Care'] +
-                    1.0 * df_filtered['Nb Like'] +
-                    0.5 * df_filtered['Nb Haha'] -
-                    0.3 * df_filtered['Nb Sad'] -
-                    0.5 * df_filtered['Nb Angry']
+                    1.7 * df_filtered['Nb Wow'] +
+                    1.5 * df_filtered['Nb Care'] +
+                    1.2 * df_filtered['Nb Like'] +
+                    0.7 * df_filtered['Nb Haha'] -
+                    0.5 * df_filtered['Nb Sad'] -
+                    0.8 * df_filtered['Nb Angry']
                 )
 
                 grouped = df_filtered.groupby(['Mois', 'Company'], as_index=False)['Reaction_Score'].sum()
@@ -209,12 +209,9 @@ def afficher_tableau_pub(df_posts):
             ).properties(
                 width=300,  # Ajuster la largeur
                 height=300,  # Ajuster la hauteur
-                title=alt.TitleParams(text=title, align="center", fontSize=20, color=title_color)
+                title=alt.TitleParams(text=title, align="center", fontSize=20, anchor='middle', color=title_color)
             ).configure_legend(
                 disable=True  # Désactiver la légende
-            ).configure_title(
-                anchor='middle',
-                fontSize=20
             )
             return chart
 
@@ -224,8 +221,7 @@ def afficher_tableau_pub(df_posts):
 
         # Afficher les graphiques côte à côte
         st.markdown("")
-        st.markdown("")
-        st.markdown("<h3 style='text-align: center;'>Répartition des Catégories par Opérateur</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center;'>Répartition des Catégories par Opérateur en {selected_year}</h3>", unsafe_allow_html=True)
         st.markdown("")
         
         if selected_operator == "Ooredoo":

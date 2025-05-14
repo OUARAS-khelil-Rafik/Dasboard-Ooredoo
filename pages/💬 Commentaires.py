@@ -190,8 +190,8 @@ def afficher_tableau_comment(df_comments, df_posts):
 
                 # Calcul du score des sentiments
                 df_merged['Sentiment_Score'] = (
-                    1.0 * (df_merged['Sentiments'] == 'Positif') +
-                    0.5 * (df_merged['Sentiments'] == 'Neutre') -
+                    1.2 * (df_merged['Sentiments'] == 'Positif') +
+                    0.3 * (df_merged['Sentiments'] == 'Neutre') -
                     1.0 * (df_merged['Sentiments'] == 'Negatif')
                 )
 
