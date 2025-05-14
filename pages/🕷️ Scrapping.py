@@ -1,5 +1,9 @@
-import os
 import streamlit as st
+
+#---------------------------- Variables ---------------------------
+
+usernames = st.secrets["usernames"]
+passwords = st.secrets["passwords"]
 
 # Configuration de la page
 st.set_page_config(page_title="Scrapping",

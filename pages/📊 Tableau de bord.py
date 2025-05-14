@@ -9,6 +9,9 @@ value_abonnee_ooredoo = "6.3M"
 value_abonnee_djezzy = "6.3M"
 value_abonnee_mobilis = "3.2M"
 
+usernames = st.secrets["usernames"]
+passwords = st.secrets["passwords"]
+
 #--------------------------------------------------------------------------------------------------
 # Dataset
 #--------------------------------------------------------------------------------------------------
@@ -350,8 +353,8 @@ if "authenticated" not in st.session_state or not st.session_state.get("authenti
 
     if submit_button:
         # Remplacez ces valeurs par vos propres vérifications
-        if (username.lower() == "ooredoodz" and password == "Ooredoo@2025") or \
-           (username.lower() == "admin" and password == "Admin@admin"):
+        if (username.lower() == usernames[0] and password == passwords[0]) or \
+           (username.lower() == usernames[1] and password == passwords[1]):
             st.session_state.authenticated = True
             st.session_state.username = username
             st.sidebar.success("Connexion réussie !")
