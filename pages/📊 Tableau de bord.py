@@ -33,7 +33,7 @@ except pd.errors.EmptyDataError:
 except Exception as e:
     st.error(f"Une erreur s'est produite : {e}")
 
-#-------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------
 
 # Configuration de la page
 st.set_page_config(page_title="Dashboard Ooredoo",
@@ -251,6 +251,9 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             with col2:
                 st.altair_chart(pie_chart, use_container_width=True) # Affichage du diagramme en camembert
             
+            # =========================================================
+            # Digramme en bar pour l'évolution du Score Total par Mois
+            # =========================================================
             
             # Calculer le Score total par mois
             score_total_par_mois = pd.DataFrame({
@@ -265,7 +268,6 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             score_total_par_mois['Mois'] = score_total_par_mois['Mois'].dt.strftime('%B').str.capitalize()
             score_total_par_mois['Score Total'] = score_total_par_mois['Score Total'].round(2)  # Arrondir à 2 décimales
 
-            # Diagramme en bar
             chart = alt.Chart(score_total_par_mois).mark_bar().encode(
                 x=alt.X('Mois:O', title='Mois', axis=alt.Axis(labelAngle=-45), sort=month_names),
                 y=alt.Y('Score Total:Q', title='Score Total'),
@@ -287,6 +289,10 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
             )
             
             st.altair_chart(chart, use_container_width=True) # Affichage du diagramme en bar
+            
+            # ============================================================
+            # Digramme en lignes pour l'évolution mensuelle du Score Total
+            # ============================================================
             
             # Préparer les données pour l'évolution mensuelle du Score Total
             evolution_data = score_total_par_mois.copy()
