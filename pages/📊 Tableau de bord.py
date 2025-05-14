@@ -286,7 +286,35 @@ def afficher_tableau(value_abonnee_ooredoo, value_abonnee_djezzy, value_abonnee_
                 )
             )
             
-            st.altair_chart(chart, use_container_width=True)
+            st.altair_chart(chart, use_container_width=True) # Affichage du diagramme en bar
+            
+            # Préparer les données pour l'évolution mensuelle du Score Total
+            evolution_data = score_total_par_mois.copy()
+            evolution_data['Mois'] = pd.Categorical(
+                evolution_data['Mois'], categories=month_names, ordered=True
+            )
+            evolution_data = evolution_data.sort_values(['Mois', 'Company'])
+
+            # Diagramme en lignes pour l'évolution mensuelle du Score Total
+            line_chart = alt.Chart(evolution_data).mark_line(point=True).encode(
+                x=alt.X('Mois:O', title='Mois', axis=alt.Axis(labelAngle=-45), sort=month_names),
+                y=alt.Y('Score Total:Q', title='Score Total', scale=alt.Scale(zero=False)),
+                color=alt.Color('Company:N',
+                                scale=alt.Scale(domain=['Ooredoo', 'Djezzy', 'Mobilis'],
+                                                range=['#E30613', '#F58220', '#28A745']),
+                                legend=alt.Legend(title="Opérateur")),
+                tooltip=['Company', 'Mois', 'Score Total']
+            ).properties(
+                width=800,
+                height=400,
+                title=alt.TitleParams(
+                    text=f"Évolution mensuelle du Score Total par Opérateur en {selected_year}",
+                    anchor="middle",
+                    fontSize=20
+                )
+            )
+
+            st.altair_chart(line_chart, use_container_width=True)  # Affichage du diagramme en lignes
         
         except Exception as e:
             st.error(f"Erreur lors de l'application des filtres : {str(e)}")
@@ -345,3 +373,9 @@ else:
 
     with st.sidebar:
         st.button("Déconnexion", on_click=logout, use_container_width=True)
+        st.markdown("""
+            <footer style="text-align: center; margin-top: 50px; font-size: 0.9rem; color: #888;">
+                <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;">
+                <p>&copy; OOREDOO ALGERIA | Développé par <strong>OUARAS Khelil Rafik</strong></p>
+            </footer>
+        """, unsafe_allow_html=True)

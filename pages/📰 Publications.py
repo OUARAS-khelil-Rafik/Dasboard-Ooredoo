@@ -335,3 +335,9 @@ else:
     
     with st.sidebar:
         st.button("Déconnexion", on_click=logout, use_container_width=True)
+        st.markdown("""
+            <footer style="text-align: center; margin-top: 50px; font-size: 0.9rem; color: #888;">
+                <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;">
+                <p>&copy; OOREDOO ALGERIA | Développé par <strong>OUARAS Khelil Rafik</strong></p>
+            </footer>
+        """, unsafe_allow_html=True)
