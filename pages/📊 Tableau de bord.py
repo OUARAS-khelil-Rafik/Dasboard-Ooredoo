@@ -9,27 +9,6 @@ value_abonnee_ooredoo = "6.3M"
 value_abonnee_djezzy = "6.3M"
 value_abonnee_mobilis = "3.2M"
 
-#-------------------------------------------------------------------
-
-# Configuration de la page
-st.set_page_config(page_title="Dashboard Ooredoo",
-                   page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
-                   layout="wide"
-)
-
-st.markdown("""
-<style>
-    /* Masque uniquement le premier élément li */
-    [data-testid="stSidebarNav"] > ul li:first-child {
-        display: none !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# Logo
-with st.sidebar:
-    st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
-
 #--------------------------------------------------------------------------------------------------
 # Dataset
 #--------------------------------------------------------------------------------------------------
@@ -53,6 +32,27 @@ except pd.errors.EmptyDataError:
     st.error("Le fichier est vide. Veuillez vérifier son contenu.")
 except Exception as e:
     st.error(f"Une erreur s'est produite : {e}")
+
+#-------------------------------------------------------------------
+
+# Configuration de la page
+st.set_page_config(page_title="Dashboard Ooredoo",
+                   page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
+                   layout="wide"
+)
+
+st.markdown("""
+<style>
+    /* Masque uniquement le premier élément li */
+    [data-testid="stSidebarNav"] > ul li:first-child {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Logo
+with st.sidebar:
+    st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
 
 # --------------------------------------------------------------------------------------------------
 # Tous les fonctions

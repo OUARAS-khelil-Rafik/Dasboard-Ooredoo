@@ -4,6 +4,22 @@ import altair as alt
 import locale
 locale.setlocale(locale.LC_TIME, 'French_France.1252')
 
+#--------------------------------------------------------------------------------------------------
+# Dataset
+#--------------------------------------------------------------------------------------------------
+
+# Chargement du dataset
+try:
+    df_posts = pd.read_csv("data/posts_df_classified.csv", encoding='utf-8', index_col=0)
+except FileNotFoundError:
+    st.error("Le fichier 'data/posts_df_classified.csv' est introuvable. Veuillez vérifier le chemin.")
+except pd.errors.EmptyDataError:
+    st.error("Le fichier est vide. Veuillez vérifier son contenu.")
+except Exception as e:
+    st.error(f"Une erreur s'est produite : {e}")
+
+#--------------------------------------------------------------------------------------------------
+
 # Configuration de la page
 st.set_page_config(page_title="Publications",
                    page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
@@ -22,20 +38,6 @@ st.markdown("""
 # Logo
 with st.sidebar:
     st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
-
-#--------------------------------------------------------------------------------------------------
-# Data Publications
-#--------------------------------------------------------------------------------------------------
-
-# Chargement du dataset
-try:
-    df_posts = pd.read_csv("data/posts_df_classified.csv", encoding='utf-8', index_col=0)
-except FileNotFoundError:
-    st.error("Le fichier 'data/posts_df_classified.csv' est introuvable. Veuillez vérifier le chemin.")
-except pd.errors.EmptyDataError:
-    st.error("Le fichier est vide. Veuillez vérifier son contenu.")
-except Exception as e:
-    st.error(f"Une erreur s'est produite : {e}")
 
 # --------------------------------------------------------------------------------------------------
 # Tous les fonctions
