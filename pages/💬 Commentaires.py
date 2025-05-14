@@ -215,10 +215,13 @@ def afficher_tableau_comment(df_comments, df_posts):
                 ).properties(
                     width=700,
                     height=400,
+                    title=alt.TitleParams(
+                    text=f"Score des Sentiments par Mois et par Opérateur en {selected_year}",
+                    anchor="middle",
+                    fontSize=27
+                    )
                 )
 
-                st.markdown(f"<h3 style='text-align: center;'>Score des Sentiments par Mois et par Opérateur en {selected_year}</h3>", unsafe_allow_html=True)
-                st.markdown("")
                 st.altair_chart(chart, use_container_width=True)
             else:
                 st.error("Les colonnes nécessaires pour calculer le score des sentiments sont manquantes.")
