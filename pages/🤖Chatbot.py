@@ -40,7 +40,7 @@ def logout():
 @st.cache_resource(show_spinner=False)
 def initialize_chatbot():
     client = ollama.Client()
-    model = 'deepseek-r1:14b'  # Ton modèle Ollama
+    model = 'qwen3:8b'  # Ton modèle Ollama
     return client, model
 
 # Nettoyage de la réponse (suppression balise <think> ...)
@@ -97,7 +97,7 @@ def chatbot():
         border-radius: 12px;
         padding: 1rem 1.2rem;
         margin-bottom: 0.5rem;
-        margin-right: 30%;
+        margin-right: 20%;
         border-left: 4px solid #e6002a;
     }
     .chat-bubble-human {
@@ -106,7 +106,7 @@ def chatbot():
         border-radius: 12px;
         padding: 1rem 1.2rem;
         margin-bottom: 0.5rem;
-        margin-left: 30%;
+        margin-left: 20%;
         border-right: 4px solid #0072c6;
     }
     [data-testid="stChatMessageAvatarUser"], 
