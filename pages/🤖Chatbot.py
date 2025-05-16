@@ -96,7 +96,7 @@ def chatbot():
         padding: 1rem 1.2rem;
         margin-bottom: 0.5rem;
         margin-right: 20%;
-        border-left: 4px solid #e6002a;
+        border-left: 4px solid #E30613;
     }
     .chat-bubble-human {
         background: #fff;
@@ -105,7 +105,7 @@ def chatbot():
         padding: 1rem 1.2rem;
         margin-bottom: 0.5rem;
         margin-left: 20%;
-        border-right: 4px solid #0072c6;
+        border-right: 4px solid #28A745;
     }
     [data-testid="stChatMessageAvatarUser"], 
     [data-testid="stChatMessageAvatarAssistant"] {
