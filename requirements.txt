@@ -1,0 +1,5 @@
+streamlit
+ollama
+pandas
+altair
+python-dotenv

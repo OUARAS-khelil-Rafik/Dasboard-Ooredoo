@@ -43,16 +43,14 @@ def initialize_chatbot():
     model = 'qwen3:8b'  # Ton modèle Ollama
     return client, model
 
-# Nettoyage de la réponse (suppression balise <think> ...)
+# Nettoyage de la réponse (suppression balises <think> et <search>)
 def clean_response(text):
-    if "<think>" in text and "</think>" in text:
-        before = text.split("<think>")[0]
-        after = text.split("</think>")[-1]
-        return (before + after).strip()
-    else:
-        return text.strip()
+    # Supprime tout ce qui est entre <think>...</think> et <search>...</search>
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<search>.*?</search>', '', text, flags=re.DOTALL)
+    return text.strip()
 
-# Génération de la réponse via Ollama
+# Génération de la réponse via Ollama (réponse directe)
 def generate_response(prompt, client, model):
     try:
         prompt = prompt[:500]
@@ -119,7 +117,6 @@ def chatbot():
     }
     </style>
     """, unsafe_allow_html=True)
-
 
     def is_arabic(text):
         # Check if the text contains any Arabic character
