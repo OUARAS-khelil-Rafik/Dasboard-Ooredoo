@@ -3,3 +3,5 @@ ollama
 pandas
 altair
 python-dotenv
+locale
+re
