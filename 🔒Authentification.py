@@ -1,5 +1,12 @@
 import streamlit as st
 
+#---------------------------- Variables ---------------------------
+
+usernames = st.secrets["usernames"]
+passwords = st.secrets["passwords"]
+
+#------------------------------------------------------------------
+
 # Configuration de la page
 st.set_page_config(
     page_title="Authentification Ooredoo",
@@ -60,10 +67,11 @@ password = st.text_input("Mot de passe", type="password", placeholder="Entrez vo
 
 # Bouton de connexion
 if st.button("Se connecter"):
-    if (username.lower() == "ooredoodz" and password == "Ooredoo@2025") or \
-       (username.lower() == "admin" and password == "Admin@admin"):
+    if (username.lower() == usernames[0] and password == passwords[0]) or \
+        (username.lower() == usernames[1] and password == passwords[1]):
         st.session_state.authenticated = True
         st.session_state.username = username
+        st.sidebar.success("Connexion réussie !")
         st.success("Connexion réussie ! Redirection...")
         st.rerun()
     else:
