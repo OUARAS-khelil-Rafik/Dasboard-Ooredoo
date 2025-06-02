@@ -1,18 +1,14 @@
 import streamlit as st
-import locale
 import ollama
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 import re
-
-# Configuration locale pour la date (optionnel selon usage)
-locale.setlocale(locale.LC_TIME, 'French_France.1252')
 
 # ---------------------------- Variables ---------------------------
 usernames = st.secrets['usernames']
 passwords = st.secrets['passwords']
 
 # Configuration de la page
-st.set_page_config(page_title="Dashboard Ooredoo",
+st.set_page_config(page_title="Chatbot Ooredoo",
                    page_icon="assets/ooredoo_logo2.png",  # Ensure this path is correct
                    layout="wide"
 )
