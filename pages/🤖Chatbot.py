@@ -220,12 +220,14 @@ def chatbot():
         background: #f6f6fa; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         border-radius: 12px; padding: 1rem 1.2rem;
         margin-bottom: 0.5rem; margin-right: 20%;
+        color: #000000;
         border-left: 4px solid #E30613;
     }
     .chat-bubble-human {
-        background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        background: #f6f6fa; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         border-radius: 12px; padding: 1rem 1.2rem;
         margin-bottom: 0.5rem; margin-left: 20%;
+        color: #000000;
         border-right: 4px solid #28A745;
     }
     [data-testid="stChatMessageAvatarUser"],
@@ -291,9 +293,25 @@ if 'authenticated' not in st.session_state or not st.session_state.get('authenti
             st.sidebar.error('Nom d\'utilisateur ou mot de passe incorrect.')
 else:
     with st.sidebar:
-        conn = init_db()
         st.write(f'Bienvenue, {st.session_state.username} !')
-        if st.sidebar.button("🗑️ Supprimer tous les historiques", use_container_width=True):
+        
+        # Bouton unique de téléchargement de l'historique
+        conn = init_db()
+        data_to_export = st.session_state.messages
+        json_str = json.dumps(data_to_export, ensure_ascii=False, indent=2)
+        buffer = io.BytesIO()
+        buffer.write(json_str.encode('utf-8'))
+        buffer.seek(0)
+        st.sidebar.download_button(
+            label="Télécharger l’historique",
+            data=buffer,
+            file_name=f"historique_{st.session_state.username}.json",
+            mime="application/json",
+            use_container_width=True
+        )
+        
+        # Bouton pour effacer l'historique
+        if st.sidebar.button("Effacer l'historique", use_container_width=True):
             clear_messages(conn)
             st.sidebar.success("Tous les historiques ont été supprimés.")
             st.session_state.messages = [{
@@ -302,20 +320,7 @@ else:
             }]
             st.rerun()
         
-        # Bouton unique de téléchargement de l'historique
-        data_to_export = st.session_state.messages
-        json_str = json.dumps(data_to_export, ensure_ascii=False, indent=2)
-        buffer = io.BytesIO()
-        buffer.write(json_str.encode('utf-8'))
-        buffer.seek(0)
-        st.sidebar.download_button(
-            label="📥 Télécharger l’historique",
-            data=buffer,
-            file_name=f"historique_{st.session_state.username}.json",
-            mime="application/json",
-            use_container_width=True
-        )
-        
+        # Bouton pour la déconnexion
         st.button('Déconnexion', on_click=logout, use_container_width=True)
         st.markdown("""
             <footer style='text-align: center; margin-top: 50px; font-size: 0.9rem; color: #888;'>
