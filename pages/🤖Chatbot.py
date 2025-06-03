@@ -241,7 +241,12 @@ def chatbot():
     """, unsafe_allow_html=True)
 
     def is_arabic(text):
-        return bool(re.search(r'[\u0600-\u06FF]', text))
+        # If contains Arabic and also Latin (French/English), treat as LTR
+        has_arabic = bool(re.search(r'[\u0600-\u06FF]', text))
+        has_latin = bool(re.search(r'[A-Za-z]', text))
+        if has_arabic and has_latin:
+            return False  # LTR
+        return has_arabic  # RTL only if pure Arabic
 
     for msg in st.session_state.messages:
         direction = "rtl" if is_arabic(msg["content"]) else "ltr"
@@ -259,20 +264,33 @@ def chatbot():
             st.markdown(f"<div class='chat-bubble-human' dir='{direction}'>{prompt}</div>", unsafe_allow_html=True)
 
         with st.chat_message("assistant"):
-            with st.spinner("L'Assistant réfléchit..."):
-                context = get_context_from_rag(prompt, collection)
-                future = generate_response_async(prompt, client, model, context)
-                try:
-                    response = future.result()
-                except TimeoutError:
-                    response = "Temps d'attente dépassé, veuillez réessayer."
-                except Exception as e:
-                    response = f"Erreur : {str(e)}"
+            context = get_context_from_rag(prompt, collection)
+            full_prompt = f"Contexte : {context}\n\nQuestion : {prompt}" if context else prompt
+            full_prompt = full_prompt[:1000]
 
-                direction = "rtl" if is_arabic(response) else "ltr"
-                st.markdown(f"<div class='chat-bubble-assistant' dir='{direction}'>{response}</div>", unsafe_allow_html=True)
-                st.session_state.messages.append({"role": "assistant", "content": response})
-                save_message(conn, username, "assistant", response)
+            response_placeholder = st.empty()
+            response_text = ""
+            
+            try:
+                stream = client.generate(model=model, prompt=full_prompt, stream=True)
+                for chunk in stream:
+                    token = chunk.get("response", "")
+                    response_text += token
+                    direction = "rtl" if is_arabic(response_text) else "ltr"
+                    bubble = f"<div class='chat-bubble-assistant' dir='{direction}'>{response_text} <span style='opacity:0.5;'>_</span></div>"
+                    response_placeholder.markdown(bubble, unsafe_allow_html=True)
+                
+                final_text = clean_response(response_text)
+                response_placeholder.markdown(f"<div class='chat-bubble-assistant' dir='{direction}'>{final_text}</div>", unsafe_allow_html=True)
+
+                st.session_state.messages.append({"role": "assistant", "content": final_text})
+                save_message(conn, username, "assistant", final_text)
+            except Exception as e:
+                error_msg = f"Erreur : {str(e)}"
+                st.markdown(f"<div class='chat-bubble-assistant'>{error_msg}</div>", unsafe_allow_html=True)
+                st.session_state.messages.append({"role": "assistant", "content": error_msg})
+                save_message(conn, username, "assistant", error_msg)
+
 
 # ---------------------------- Authentification -------------------------
 if 'authenticated' not in st.session_state or not st.session_state.get('authenticated', False):
