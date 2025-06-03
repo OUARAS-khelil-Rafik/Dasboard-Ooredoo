@@ -339,7 +339,7 @@ else:
         buffer.write(json_str.encode('utf-8'))
         buffer.seek(0)
         st.sidebar.download_button(
-            label="Télécharger l’historique (JSON DB)",
+            label="Télécharger l’historique",
             data=buffer,
             file_name=f"chat_history_{st.session_state.username}.json",
             mime="application/json",
