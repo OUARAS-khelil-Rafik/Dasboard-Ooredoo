@@ -1,6 +1,6 @@
 import streamlit as st
 import ollama
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from concurrent.futures import ThreadPoolExecutor
 import re
 import pandas as pd
 from sentence_transformers import SentenceTransformer
@@ -12,42 +12,6 @@ import io
 
 # Supprimer torch.classes du système de surveillance de Streamlit
 sys.modules['torch.classes'].__path__ = []
-
-# ----------- Base SQLite pour historique --------------
-def init_db():
-    conn = sqlite3.connect('data/chat_history.db', check_same_thread=False)
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS conversations (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT,
-            role TEXT,
-            content TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    return conn
-
-
-def save_message(conn, username, role, content):
-    c = conn.cursor()
-    c.execute('INSERT INTO conversations (username, role, content) VALUES (?, ?, ?)', (username, role, content))
-    conn.commit()
-
-def load_messages(conn, username):
-    c = conn.cursor()
-    c.execute('SELECT role, content FROM conversations WHERE username = ? ORDER BY timestamp', (username,))
-    rows = c.fetchall()
-    return [{"role": r, "content": c} for r, c in rows]
-
-def clear_messages(conn, username=None):
-    c = conn.cursor()
-    if username is None:
-        c.execute('DELETE FROM conversations')
-    else:
-        c.execute('DELETE FROM conversations WHERE username = ?', (username,))
-    conn.commit()
 
 # ---------------------------- Variables ---------------------------
 usernames = st.secrets['usernames']
@@ -70,11 +34,51 @@ st.markdown("""
 with st.sidebar:
     st.logo("assets/ooredoo_logo.png", size="large", link="https://www.ooredoo.dz/")
 
+# ----------------- Tous les fonctions de la page ------------------
+
 # ---------------------------- Déconnexion -------------------------
 def logout():
     st.session_state.authenticated = False
     st.session_state.username = None
     st.rerun()
+
+# ----------- Base SQLite pour historique --------------
+def init_db():
+    conn = sqlite3.connect('data/chat_history.db', check_same_thread=False)
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            role TEXT,
+            content TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    return conn
+
+# ---------------------------- Fonctions de gestion des messages -------------------------
+def save_message(conn, username, role, content):
+    c = conn.cursor()
+    c.execute('INSERT INTO conversations (username, role, content) VALUES (?, ?, ?)', (username, role, content))
+    conn.commit()
+
+# ---------------------------- Chargement des messages -------------------------
+def load_messages(conn, username):
+    c = conn.cursor()
+    c.execute('SELECT role, content FROM conversations WHERE username = ? ORDER BY timestamp', (username,))
+    rows = c.fetchall()
+    return [{"role": r, "content": c} for r, c in rows]
+
+# ---------------------------- Effacer les messages -------------------------
+def clear_messages(conn, username=None):
+    c = conn.cursor()
+    if username is None:
+        c.execute('DELETE FROM conversations')
+    else:
+        c.execute('DELETE FROM conversations WHERE username = ?', (username,))
+    conn.commit()
 
 # ---------------------------- Chatbot Init -------------------------
 @st.cache_resource(show_spinner=False)
@@ -106,16 +110,20 @@ def merge_posts_with_comments(posts_df_path="data/posts_df_classified.csv", comm
         comment_categories = [col for col in comments_df.columns if col not in ['ID Comment', 'ID Post', 'User Name', 'Comments', 'Sentiments'] and row.get(col, 0) == 1]
         return (
             f"[COMMENTAIRE]\n"
+            f"ID Comment: {row['ID Comment']}\n"
+            f"ID Post: {row['ID Post']}\n"
             f"Utilisateur: {row['User Name']}\n"
             f"Commentaire: {row['Comments']}\n"
             f"Sentiment: {row['Sentiments']}\n"
             f"Catégories: {', '.join(comment_categories)}\n"
         )
-
+    
+    # Fonction pour générer le texte complet du post
     def full_post_text(row):
         post_categories = [col for col in ['Culture & Celebration', 'Sport', 'Product', 'Promotion', 'Network', 'Survey', 'Event', 'Contest & Games', 'Other'] if row.get(col, 0) == 1]
         return (
             f"[POST]\n"
+            f"ID: {row['ID']}\n"
             f"Date: {row['Date']}\n"
             f"Contenu: {row['Contents']}\n"
             f"Lien: {row['Lien Post']}\n"
@@ -175,7 +183,7 @@ def setup_rag():
     return collection
 
 # ---------------------------- Recherche contextuelle -------------------------
-def get_context_from_rag(query, collection, k=3):
+def get_context_from_rag(query, collection, k=5):
     results = collection.query(query_texts=[query], n_results=k)
     return "\n\n".join(results['documents'][0]) if results['documents'] else ""
 
@@ -310,20 +318,30 @@ if 'authenticated' not in st.session_state or not st.session_state.get('authenti
         else:
             st.sidebar.error('Nom d\'utilisateur ou mot de passe incorrect.')
 else:
+    # Ensure messages are initialized before sidebar access
+    if "messages" not in st.session_state:
+        st.session_state.messages = [{
+            "role": "assistant",
+            "content": f"Bonjour {st.session_state.get('username', '')} 👋, comment puis-je vous aider sur les opérateurs télécom en Algérie ?"
+        }]
     with st.sidebar:
         st.write(f'Bienvenue, {st.session_state.username} !')
         
-        # Bouton unique de téléchargement de l'historique
+        # Bouton unique de téléchargement de l'historique (export DB en JSON)
         conn = init_db()
-        data_to_export = st.session_state.messages
+        c = conn.cursor()
+        c.execute("SELECT id, username, role, content, timestamp FROM conversations WHERE username = ?", (st.session_state.username,))
+        rows = c.fetchall()
+        columns = ["id", "username", "role", "content", "timestamp"]
+        data_to_export = [dict(zip(columns, row)) for row in rows]
         json_str = json.dumps(data_to_export, ensure_ascii=False, indent=2)
         buffer = io.BytesIO()
         buffer.write(json_str.encode('utf-8'))
         buffer.seek(0)
         st.sidebar.download_button(
-            label="Télécharger l’historique",
+            label="Télécharger l’historique (JSON DB)",
             data=buffer,
-            file_name=f"historique_{st.session_state.username}.json",
+            file_name=f"chat_history_{st.session_state.username}.json",
             mime="application/json",
             use_container_width=True
         )
