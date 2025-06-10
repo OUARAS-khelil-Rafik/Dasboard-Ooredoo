@@ -10,5 +10,5 @@ chromadb==0.4.24
 scikit-learn==1.5.1
 matplotlib==3.8.4
 numpy==1.26.4
-requests==2.32.2
+requests==2.32.4
 seaborn==0.13.2
